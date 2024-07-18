@@ -17,39 +17,41 @@ The AD users for this project will be added to the existing Active Directory ser
 <h2>Generate CSV File with User Attributes</h2> 
 
 <p align="center">
-To begin, we will replicate an enterprise environment by creating a Google Sheet that has users and their data inputted. To generate the first and last name values, I used a random name generator to get 105 different random user values, and inputted them into the sheet. 
+To begin, we will replicate an enterprise environment by creating a Google Sheet with user data. I used a random name generator to create 105 unique names, which I then inputted into the sheet.
 <br/>
 <br/>  
-For the ‘Display Name’ column, I used the following Excel formula to concatenate the first and last name together- ‘=A2&" "&C2’. For the 'Email' and 'UPN' columns, I used the following formula to take the lowercase first and last name values followed by '@domain.local' - ‘=LOWER(A2&"."&C2&"@mydomain.local")’.
+For the 'Display Name' column, I used the Excel formula =A2&" "&C2 to concatenate the first and last names. For the 'Email' and 'UPN' columns, I used the formula =LOWER(A2&"."&C2&"@mydomain.local") to generate the email addresses by combining the lowercase first and last names followed by '@domain.local'.
+   <br/>
+ <br/>  
 <img src="https://i.imgur.com/ZJDh0m6.png" alt="User Attributes" height=85% width=85%/>
  <br/>
  <br/>  
-I assigned each user a default password, and specifed the OU and DC values for the Powershell script to read. As depicted below, more specific user information such as address, telephone number, and job title can be added as well for automated user provisioning. 
+I assigned each user a default password and specified the 'OU' and 'DC' values for the PowerShell script to read. Additionally, more specific user information such as address, telephone number, and job title can be added for automated user provisioning.
 <br/>
  <br/> 
 <img src="https://i.imgur.com/0Eb9u6n.png" alt="More User Attributes"/>
 <br/>
  <br/> 
-Once the desired values are entered, naviagate to 'File > Download > Comma Separated Values (.csv)' to download the sheet as a CSV file. 
+Once the desired values are entered, navigate to 'File > Download > Comma Separated Values (.csv)' to download the sheet as a CSV file.
  <br/>
  <br/>
 <img src="https://i.imgur.com/PEX0fcI.png" alt="Download CSV File" height=85% width=85%/> 
 <br/>
 <br/>
-CSV files are plaintext files that are stored in a table format. Here is what the downloaded CSV file should look like: 
+CSV files are plaintext files that store data in a table format, with each line representing a row and each value separated by a comma. Here is what the downloaded CSV file should look like:
 <br/> 
 <br/>
 <img src="https://i.imgur.com/xbLvncU.png" alt="CSV File"/>
 
 <h2>Parse the CSV File with Powershell Script</h2> 
 <p align="center">
-Prior to running our Powershell script, we will navigate to our Windows Server 2019 instance in VirtualBox and create an Organizational Unit (OU) in Active Directory Users and Computers called 'Test'. This matches the defined value in our CSV file under the 'OU' column. 
+Before running our PowerShell script, we'll access our Windows Server 2019 instance in VirtualBox and establish an Organizational Unit (OU) named 'Test' within Active Directory Users and Computers. This corresponds to the specified value in our CSV file under the 'OU' column.
 <br/>
 <br/>
  <img src="https://i.imgur.com/BqeTxwX.png" alt="Create Test OU"/>
   <br/>
 <br/>
-Next, we will run Windows PowerShell ISE as an administrator, and navigate to 'File > New' to begin writing our script.  
+Next, we will launch Windows PowerShell ISE with administrator privileges and proceed to 'File > New' to begin writing the script.  
   <br/>
 <br/>
 <img src="https://i.imgur.com/3yhE4sy.png" alt="Start Powershell ISE"/>
@@ -73,7 +75,7 @@ The ‘foreach’ statement reads through the user data from each field (column)
  Now that the user data is imported and stored into values, the ‘if’ block will check to see if the user already exists in AD, and will issue a subsequent warning message. The ‘else’ block will create the user if they do not already exist in AD, using the variables that were defined earlier and the imported CSV data. 
  <br/>
  <br/>
-The script is set up to not require the user to change their password at logon, however since the current password is very weak and all users share the same password, this is not a security best practice, and is only configured for this practice lab environment. 
+The script is configured not to prompt users to change their password at logon. However, it's important to note that using a weak password shared among all users is not a security best practice. This configuration is intended only for this practice lab environment.
  <br/>
  <br/>
  <img src="https://i.imgur.com/gAIFg0z.png" alt="Powershell Script Continued"/>
@@ -85,7 +87,7 @@ Proceed by running the script and navigating to Active Directory Users and Compu
  <img src="https://i.imgur.com/BlLYv4w.png" alt="Run Powershell Script"/>
  <br/>
  <br/>
-After refreshing, the users that were defined in the original Google Sheet should now be present in the 'Test' OU. After clicking on 'Properties' of a sample user, the unique attributes should also be defined: 
+After refreshing, the users defined in the original Google Sheet should now appear in the 'Test' OU. Clicking on the 'Properties' of a sample user will display their unique attributes as well.
  <br/>
  <br/>
  <img src="https://i.imgur.com/JWcy7CO.png" alt="Confirm Users"/>
